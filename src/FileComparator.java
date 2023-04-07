@@ -90,7 +90,7 @@ public class FileComparator {
                     int count1 = file1Data.containsKey(data) ? file1Data.get(data).size() : 0;
                     int count2 = file2Data.containsKey(data) ? file2Data.get(data).size() : 0;
                     int totalCount = count1 + count2;
-
+                    //set max to 0 to exclude this feature
                     int max = 100; // This is the max number of times a data can occur in a singular file before it is not included in the output
                     if (totalCount > 10 && totalCount < max) {
                         writer.println("SINGULAR FILE REPEATED DATA");
