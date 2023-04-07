@@ -92,7 +92,8 @@ public class FileComparator {
                     int totalCount = count1 + count2;
                     //set max to 0 to exclude this feature
                     int max = 100; // This is the max number of times a data can occur in a singular file before it is not included in the output
-                    if (totalCount > 10 && totalCount < max) {
+                    int min = 10; // This is the min number of times a data can occur in a singular file before it is included in the output
+                    if (totalCount > min && totalCount < max) {
                         writer.println("SINGULAR FILE REPEATED DATA");
                         writer.println("Data: " + data);
                         writer.println("Found in row(s):");
