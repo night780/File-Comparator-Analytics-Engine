@@ -1,6 +1,10 @@
 # File Comparator
 This is a Java program that takes in two text files and compares them to find duplicates(used for identifying patterns). It was designed to take in .txt files, the txt files can contain any information such as excel data, code, reports, ext. If any duplicates are found, the program writes the information to an output text file called "output.txt".
 
+# Feature
+You can also compare singular files in this. int max will enable or disable this. Set to 0 to exclude results in the program or a max number to include them. (For example, if you have 200 dates for the same day you could set the max to 199 to exclude the date output for matches.) additionaly, you can set the min for triggering the singular file output, if you dont care about patterns under 5 or 10 int min will exlcude all matchs under that number. 
+
+
 # Usage
 The program takes in two text files as input, file1.txt and file2.txt, and outputs the results to output.txt. To run the program, simply compile and run the FileComparator.java file. The program can also be run from the command line by passing in the file paths as arguments to the main function.
 
