@@ -11,6 +11,7 @@ import java.util.*;
  */
 public class FileComparator {
 
+
     /**
      * The main function reads in two files, file 1 and file 2.
      * It then creates a map of the data from each file, with the key being the data itself and
@@ -24,6 +25,7 @@ public class FileComparator {
      *
      */
     public static void main(String[] args) throws IOException {
+        int count = 0;
         String file1Path = "file1.txt";
         String file2Path = "file2.txt";
         String outputFilePath = "output.txt";
@@ -35,34 +37,107 @@ public class FileComparator {
         Set<String> matchingData = new HashSet<>(file1Data.keySet());
         matchingData.retainAll(file2Data.keySet());
 
-        PrintWriter writer = new PrintWriter(new FileWriter(outputFilePath));
+        Set<String> singularData = new HashSet<>();
+        singularData.addAll(file1Data.keySet());
+        singularData.addAll(file2Data.keySet());
 
-        if (matchingData.isEmpty()) {
-            writer.println("No matching data found.");
-        } else {
-            writer.println("Total duplicates found: " + matchingData.size());
-            writer.println("Matching data:");
-            for (String data : matchingData) {
-                writer.println("Data: " + data);
-                writer.println("Found in row(s):");
-                writer.println(file1Path + ":");
-                for (DataRow row : file1Data.get(data)) {
-                    writer.println(row.rowNum + ": " + row.text);
-                }
-                writer.println("\t---------------------------");
-                writer.println(file2Path + ":");
-                for (DataRow row : file2Data.get(data)) {
-                    writer.println(row.rowNum + ": " + row.text);
-                }
-                writer.println();
-                writer.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+        Set<String> repeatedData = new HashSet<>();
+        for (String data : singularData) {
+            int count1 = file1Data.containsKey(data) ? file1Data.get(data).size() : 0;
+            int count2 = file2Data.containsKey(data) ? file2Data.get(data).size() : 0;
+            if (count1 + count2 > 5) {
+                repeatedData.add(data);
             }
-
         }
 
+        PrintWriter writer = new PrintWriter(new FileWriter(outputFilePath));
+
+        if (matchingData.isEmpty() && repeatedData.isEmpty()) {
+            writer.println("No matching or repeated data found.");
+        } else {
+            if (!matchingData.isEmpty()) {
+                writer.println("Total duplicates found between file1 and file2: " + matchingData.size());
+                writer.println("Matching data:");
+                for (String data : matchingData) {
+                    writer.println("Data: " + data);
+                    writer.println("Found in row(s):");
+                    writer.println(file1Path + ":");
+
+                    for (DataRow row : file1Data.get(data)) {
+                        count++;
+                        writer.println(row.rowNum + ": " + row.text);
+                    }
+                    writer.println("Total: "+count);
+                    count = 0;
+                    writer.println("\t---------------------------");
+                    writer.println(file2Path + ":");
+                    for (DataRow row : file2Data.get(data)) {
+                        count++;
+                        writer.println(row.rowNum + ": " + row.text);
+                    }
+                    writer.println("Total: "+count);
+                    count = 0;
+                    writer.println();
+                    writer.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                }
+            }
+            //if singular files have repeated data and is more than 10 times include it in the output
+// Check for repeated data in singular files and include in output if it occurs more than 10 times
+            if (!repeatedData.isEmpty()) {
+                writer.println("Repeated data in singular files (occurs more than 10 times):");
+                writer.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                for (String data : repeatedData) {
+                    int count1 = file1Data.containsKey(data) ? file1Data.get(data).size() : 0;
+                    int count2 = file2Data.containsKey(data) ? file2Data.get(data).size() : 0;
+                    int totalCount = count1 + count2;
+
+                    int max = 100; // This is the max number of times a data can occur in a singular file before it is not included in the output
+                    if (totalCount > 10 && totalCount < max) {
+                        writer.println("SINGULAR FILE REPEATED DATA");
+                        writer.println("Data: " + data);
+                        writer.println("Found in row(s):");
+                        if (file1Data.containsKey(data)) {
+                            writer.println(file1Path + ":");
+                            for (DataRow row : file1Data.get(data)) {
+                                count++;
+                                writer.println(row.rowNum + ": " + row.text);
+                            }
+                            writer.println("Total: "+count);
+                            count = 0;
+                        }
+                        if (file2Data.containsKey(data)) {
+                            writer.println(file2Path + ":");
+                            for (DataRow row : file2Data.get(data)) {
+                                count++;
+                                writer.println(row.rowNum + ": " + row.text);
+                            }
+                            writer.println("Total: "+count);
+                            count = 0;
+                        }
+                        writer.println();
+                        writer.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                    }
+                }
+            }
+
+
+        }
         writer.close();
     }
 
+
+
+
+
+                                /**
+                                 * The countTotalRows function takes in a file path and returns the number of rows in that file.
+                                 *
+                                 *
+                                 * @param filePath Specify the path of the file to be read
+                                 *
+                                 * @return The total number of rows in the file
+                                 *
+                                 */
     private static int countTotalRows(String filePath) throws IOException {
         int count = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
