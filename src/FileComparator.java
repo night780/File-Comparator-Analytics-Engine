@@ -84,21 +84,22 @@ public class FileComparator {
             //if singular files have repeated data and is more than 10 times include it in the output
 // Check for repeated data in singular files and include in output if it occurs more than 10 times
             if (!repeatedData.isEmpty()) {
-                writer.println("Repeated data in singular files (occurs more than 10 times):");
+                int max = 100; // This is the max number of times a data can occur in a singular file before it is not included in the output
+                //set max to 0 to exclude this feature
+                int min = 10; // This is the min number of times a data can occur in a singular file before it is included in the output
+                writer.println("Repeated data in singular files (occurs more than "+min+" times and less than "+max+"):");
                 writer.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
                 for (String data : repeatedData) {
                     int count1 = file1Data.containsKey(data) ? file1Data.get(data).size() : 0;
                     int count2 = file2Data.containsKey(data) ? file2Data.get(data).size() : 0;
                     int totalCount = count1 + count2;
-                    //set max to 0 to exclude this feature
-                    int max = 100; // This is the max number of times a data can occur in a singular file before it is not included in the output
-                    int min = 10; // This is the min number of times a data can occur in a singular file before it is included in the output
                     if (totalCount > min && totalCount < max) {
                         writer.println("SINGULAR FILE REPEATED DATA");
                         writer.println("Data: " + data);
                         writer.println("Found in row(s):");
                         if (file1Data.containsKey(data)) {
                             writer.println(file1Path + ":");
+
                             for (DataRow row : file1Data.get(data)) {
                                 count++;
                                 writer.println(row.rowNum + ": " + row.text);
@@ -108,6 +109,7 @@ public class FileComparator {
                         }
                         if (file2Data.containsKey(data)) {
                             writer.println(file2Path + ":");
+
                             for (DataRow row : file2Data.get(data)) {
                                 count++;
                                 writer.println(row.rowNum + ": " + row.text);
