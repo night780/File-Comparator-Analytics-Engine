@@ -1,5 +1,5 @@
 # File Comparator
-This is a Java program that takes in two text files and compares them to find duplicates. It was designed to take in .xls files converted to .txt files and searches for duplicate information. If any duplicates are found, the program writes the information to an output text file called "output.txt".
+This is a Java program that takes in two text files and compares them to find duplicates(used for identifying patterns). It was designed to take in .xls files converted to .txt files and searches for duplicate information. If any duplicates are found, the program writes the information to an output text file called "output.txt".
 
 # Usage
 The program takes in two text files as input, file1.txt and file2.txt, and outputs the results to output.txt. To run the program, simply compile and run the FileComparator.java file. The program can also be run from the command line by passing in the file paths as arguments to the main function.
